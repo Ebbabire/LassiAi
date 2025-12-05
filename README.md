@@ -1,73 +1,60 @@
-# React + TypeScript + Vite
+# LassiAI - Clinical Case Management
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A professional veterinary clinical case management interface built with React and Tailwind CSS. This project demonstrates a clean, master-detail architecture for managing patient intake, clinical history, and AI-driven recommendations.
 
-Currently, two official plugins are available:
+## 🚀 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Split View Architecture**: A responsive Master-Detail interface that handles case lists and detailed clinical views side-by-side.
+- **Clinical UI Primitives**: Modular, reusable UI components including Status Badges, Clinical Flags, and Skeletons located in `components/ui`.
+- **Recommendation Engine UI**: dedicated components for displaying AI-driven clinical recommendations and loading states.
+- **Smart Sorting & Filtering**: Built-in sorting functionality for case history.
+- **Type Safety**: Centralized TypeScript definitions for robust data handling.
+- **Responsive Design**: Adapts seamlessly from mobile stack views to desktop split views.
 
-## React Compiler
+## 🛠 Project Structure
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+The project is organized by feature domain (`pages/case`) and shared utilities (`components/ui`, `hooks`, `data`).
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+src/
+├── components/
+│   └── ui/                  # Shared primitive components
+│       ├── ClinicalFlag.tsx # Critical alerts/flags
+│       ├── StatusBadge.tsx  # Case status indicators
+│       ├── Skeleton.tsx     # Loading placeholders
+│       └── ...              # Layout, Navbar, Headers
+├── data/                    # Mock data and static content
+├── hooks/                   # Custom hooks (e.g., useDebounce)
+├── pages/
+│   └── case/                # Case Management Feature Module
+│       ├── components/      # Domain-specific components
+│       │   ├── CaseList.tsx           # Sidebar list view
+│       │   ├── CaseDetail.tsx         # Main detail panel
+│       │   ├── RecommendationCard.tsx # AI suggestion cards
+│       │   └── ...
+│       └── Cases.tsx        # Main page controller
+├── type/                    # Shared TypeScript definitions
+├── App.tsx                  # Main application layout
+└── main.tsx                 # Entry point
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 📦 Setup & Usage
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1. **Install Dependencies**
+   Ensure you have a React environment set up with Tailwind CSS configured.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+2. **Run the App**
+   The application entry point is `main.tsx`, which mounts the `Cases` page via `App.tsx`.
+
+## 🎨 Design System
+
+### Visual Language
+
+- **Palette**: Uses a `slate` (gray-blue) foundation for a sterile, clinical feel, accented by semantic colors (Blue, Amber, Emerald) for status indicators.
+- **Typography**: `Inter` font family for high legibility in data-dense views.
+
+### Component Organization
+
+- **Pages**: Top-level views (e.g., `Cases.tsx`) act as controllers, managing state and layout.
+- **UI Components**: Dumb, presentational components (buttons, badges) are isolated in `src/components/ui` for reuse.
+- **Feature Components**: Complex, domain-specific logic (e.g., `RecommendationPanel`) lives within the feature directory `src/pages/case/components`.
