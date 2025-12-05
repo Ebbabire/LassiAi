@@ -7,7 +7,7 @@ import {
   AlertCircle,
   AlertTriangle,
 } from "lucide-react";
-import ClinicalFlag from "@/components/ClinicalFlag";
+import ClinicalFlag from "@/pages/case/components/RecommendationPanel/ClinicalFlag";
 
 import type { ClinicalData } from "@/type";
 import { RecommendationCard } from "./RecommendationCard";
@@ -31,7 +31,7 @@ export const RecommendationsPanel = ({ data }: RecommendationsPanelProps) => {
     const runCheck = async () => {
       setLoading(true);
       setError(null);
-      await new Promise((r) => setTimeout(r, 300)); // simulate async latency
+      await new Promise((r) => setTimeout(r, 500)); // simulate async latency
 
       const normalize = (str: string) =>
         str.toLowerCase().replace(/[^a-z0-9]/g, "");
