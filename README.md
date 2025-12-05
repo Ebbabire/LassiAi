@@ -58,3 +58,30 @@ src/
 - **Pages**: Top-level views (e.g., `Cases.tsx`) act as controllers, managing state and layout.
 - **UI Components**: Dumb, presentational components (buttons, badges) are isolated in `src/components/ui` for reuse.
 - **Feature Components**: Complex, domain-specific logic (e.g., `RecommendationPanel`) lives within the feature directory `src/pages/case/components`.
+
+### Design Justification: Recommendation Component
+
+We compared two approaches for the Recommendation Component—**Abdul's** (List style) vs. **Mine(Ebba's)** (Grid style)—and selected the Grid style for the following reasons:
+
+#### 1. It Fits the Data Structure Perfectly
+
+The JSON provides a list of recommendations with simple key-value pairs (title and value).
+
+- **Abdul's (The List)**: Uses checkboxes. However, the JSON does not have a "completed" status. Adding checkboxes implies functionality that doesn't exist in the data.
+- **Mine(Ebba's) (The Grid)**: Uses a 2x2 Grid. This is the perfect layout for the 4 items in the JSON (Antibiotic, Dosage, Duration, Monitoring). It turns the data into a "dashboard" view rather than a "to-do" list, allowing the doctor to scan the dosage and duration side-by-side.
+
+#### 2. Space Efficiency (The "Small Component" Requirement)
+
+The task requirements specified a "small React component."
+
+- **Mine(Ebba's)** is compact. It nests the recommendations side-by-side.
+- **Abdul's** stacks everything vertically. If 2 more recommendations are added, that component gets very tall and requires scrolling. **Mine(Ebba's)** handles density much better.
+
+#### 3. Better Handling of "Flags"
+
+**Mine(Ebba's)** displays the flags as "Pills" (rounded badges) at the bottom.
+This visual treatment matches the content of the JSON: "No complicating factors identified". This isn't a paragraph to be read; it's a quick status check. The green outline style communicates "Safe/Clear" instantly.
+
+#### 4. Implementation Ease (React + Tailwind)
+
+**Mine(Ebba's)** is incredibly easy to build using Tailwind's grid system, which matches the requirements perfectly.
