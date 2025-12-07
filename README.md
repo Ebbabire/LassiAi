@@ -2,6 +2,10 @@
 
 A professional veterinary clinical case management interface built with React and Tailwind CSS. This project demonstrates a clean, master-detail architecture for managing patient intake, clinical history, and AI-driven recommendations.
 
+## 🔗 Live Demo
+
+**View the deployed application here:** [https://lassi-ai.netlify.app/cases](https://lassi-ai.netlify.app/cases)
+
 ## 🚀 Features
 
 - **Split View Architecture**: A responsive Master-Detail interface that handles case lists and detailed clinical views side-by-side.
@@ -76,13 +80,6 @@ src/
 - **React**: UI Library
 - **Tailwind CSS**: Utility-first styling
 - **Lucide React**: Iconography
-
-## 🎨 Design System
-
-### Visual Language
-
-- **Palette**: Uses a `slate` (gray-blue) foundation for a sterile, clinical feel, accented by semantic colors (Blue, Amber, Emerald) for status indicators.
-- **Typography**: `Inter` font family for high legibility in data-dense views.
 
 ### Component Organization
 
