@@ -4,6 +4,7 @@ import { FileBraces } from "lucide-react";
 import { mockCases } from "@/data";
 import CaseList from "./components/CaseList";
 import { CaseDetail } from "./components/CaseDetail";
+import { VoiceOverlay } from "@/components/intel/VoiceOverlay";
 
 const Cases = () => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -18,6 +19,7 @@ const Cases = () => {
 
   return (
     <div className="container mx-auto px-4 py-6 h-[calc(100vh-80px)] overflow-y-auto">
+      <VoiceOverlay />
       {/* Page Header */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-slate-900">Clinical Cases</h1>
