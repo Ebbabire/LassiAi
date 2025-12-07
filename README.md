@@ -53,11 +53,29 @@ src/
 
 ## 📦 Setup & Usage
 
-1. **Install Dependencies**
-   Ensure you have a React environment set up with Tailwind CSS configured.
+### Prerequisites
 
-2. **Run the App**
-   The application entry point is `index.tsx`, which mounts the `Cases` page via `App.tsx`.
+- Node.js (v18+)
+- npm or yarn
+
+### Installation
+
+1. Install the dependencies:
+
+   ```bash
+   npm install
+   ```
+
+2. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+## Technologies
+
+- **React**: UI Library
+- **Tailwind CSS**: Utility-first styling
+- **Lucide React**: Iconography
 
 ## 🎨 Design System
 
