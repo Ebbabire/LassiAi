@@ -3,7 +3,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 
 import RecommendationsPanelLoading from "./RecommendationPanel_loading";
 import CaseSummay from "./CaseSummay";
-import { ProfileIntelPanel } from "../CaseInelPanel/CaseInetPanel";
+// import { CaseIntelPanel } from "../CaseInelPanel/CaseInetPanel";
 import { ReasoningPanel } from "../ReasoningPanel/ReasoningPanel";
 import { TreatmentPanel } from "../TreatmentPanel/TreatmentPanel";
 import { OpsIntelPanel } from "../OpsIntelPanel/OpsIntelPanel";
@@ -58,7 +58,7 @@ export const RecommendationsPanel = () => {
         <h2 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
           Intelligence Layers
         </h2>
-        <ProfileIntelPanel />
+        {/* <CaseIntelPanel /> */}
       </div>
 
       {/* Content Area: Logic for Loading / Error / Data */}
