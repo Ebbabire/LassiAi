@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Check, Copy, Stethoscope } from "lucide-react";
-import type { ClinicalData } from "@/type";
+import type { ClinicalData } from "@/type/case";
 
 interface CaseSummaryProps {
   summary: string;

@@ -1,71 +1,83 @@
+import { useMemo, useEffect } from "react";
+import { GlobalIntelPanel } from "./GlobalIntelPanel/GlobalIntelPanel";
+import { useCaseContext } from "@/hooks/useCaseContext";
+import type { Case } from "@/type/case";
+import { CaseIntelPanel } from "./CaseInelPanel/CaseInetPanel";
+import { mockBundles } from "@/data/mockIntellegence";
 import { StatusBadge } from "@/components/ui/StatusBadge";
+import { ChevronLeft, FileText } from "lucide-react";
 
-import type { Case } from "@/type";
-import { RecommendationsPanel } from "./RecommendationPanel/RecommendationPanel";
-import { GlobalIntelPanel } from "./RecommendationPanel/GlobalIntelPanel/GlobalIntelPanel";
+// Panels
+
+// Mock Data Source (In real app, this would be a React Query hook)
 
 interface CaseDetailProps {
   caseData: Case;
+  onBack?: () => void;
 }
 
-export const CaseDetail: React.FC<CaseDetailProps> = ({ caseData }) => {
+export const CaseDetail = ({ caseData, onBack }: CaseDetailProps) => {
+  const { setActiveCaseId } = useCaseContext();
+
+  // Sync active case with context
+  useEffect(() => {
+    setActiveCaseId(caseData.id);
+  }, [caseData.id, setActiveCaseId]);
+
+  // Retrieve Intelligence Data
+  const bundle = useMemo(() => mockBundles[caseData.id] || null, [caseData.id]);
+  // const aiResponse = useMemo(() => mockAIResponses[caseData.id] || null, [caseData.id]);
+
   return (
-    <div className="h-full bg-white border border-slate-200 rounded-lg shadow-sm flex flex-col overflow-hidden animate-in fade-in duration-300 relative">
+    <div className="h-full bg-slate-50/50 border border-slate-200 rounded-lg shadow-sm flex flex-col overflow-hidden animate-in fade-in duration-300 relative">
       {/* Global Intelligence Layer (Top) */}
       <GlobalIntelPanel />
 
-      {/* Detail Header (Sticky) */}
-      <div className="px-6 py-5 bg-white border-b border-slate-100 shrink-0 z-10">
-        <div className="flex justify-between items-start mb-2">
+      {/* Header */}
+      <div className="px-6 py-4 bg-white border-b border-slate-100 shrink-0 z-10 flex justify-between items-center shadow-sm">
+        <div className="flex items-center gap-3">
+          {onBack && (
+            <button
+              title="back"
+              onClick={onBack}
+              className="p-1.5 hover:bg-slate-100 rounded-full text-slate-500 transition-colors"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+          )}
           <div>
-            <div className="flex items-center gap-3 mb-1">
-              <h1 className="text-2xl font-bold text-slate-900">
-                {caseData.name}
-              </h1>
-              <StatusBadge status={caseData.status} />
-            </div>
-            <p className="text-sm text-slate-500 font-medium">
-              {caseData.species} • {caseData.age} • Case #{caseData.id}
-            </p>
-          </div>
-          <div className="text-right">
-            <span className="block text-xs text-slate-400 uppercase tracking-wide">
-              Created
-            </span>
-            <span className="text-sm font-medium text-slate-700">
-              {caseData.createdAt}
+            <h1 className="text-lg font-bold text-slate-900 leading-tight">
+              {caseData.name}
+            </h1>
+            <span className="text-xs text-slate-400 font-mono">
+              #{caseData.id}
             </span>
           </div>
+        </div>
+        <div className="text-right">
+          <StatusBadge label={caseData.status} variant={caseData.status} />
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-slate-50/50">
-        {/* Core Case Data (Static) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
-            <span className="block text-xs text-slate-400 uppercase tracking-wide mb-1">
-              Owner
-            </span>
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-500">
-                {caseData.owner.charAt(0)}
+      {/* Scrollable Panel Area */}
+      <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-2">
+        {bundle ? (
+          <>
+            <CaseIntelPanel bundle={bundle} />
+          </>
+        ) : (
+          <div className="flex flex-col items-center justify-center py-12 text-center">
+            <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm max-w-sm">
+              <div className="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-300">
+                <FileText className="w-6 h-6" />
               </div>
-              <span className="font-medium text-slate-900">
-                {caseData.owner}
-              </span>
+              <h3 className="text-slate-900 font-medium">Standard Case View</h3>
+              <p className="text-slate-500 text-sm mt-1">
+                Intelligence features are not enabled for this case type.
+              </p>
             </div>
           </div>
-          <div className="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
-            <span className="block text-xs text-slate-400 uppercase tracking-wide mb-1">
-              Reason for Visit
-            </span>
-            <p className="font-medium text-slate-900 line-clamp-2">
-              {caseData.complaint}
-            </p>
-          </div>
-        </div>
-
-        <RecommendationsPanel />
+        )}
       </div>
     </div>
   );

@@ -1,16 +1,15 @@
-import { useState } from "react";
-import { FileBraces } from "lucide-react";
-
-import { mockCases } from "@/data";
-import CaseList from "./components/CaseList";
+import React, { useState } from "react";
 import { CaseDetail } from "./components/CaseDetail";
-import { VoiceOverlay } from "@/components/intel/VoiceOverlay";
+import { VoiceOverlay } from "../../components/intel/VoiceOverlay";
+import { mockCases } from "@/data/mockCases";
+import CaseList from "./components/CaseList";
+import { FileText } from "lucide-react";
 
-const Cases = () => {
+const Cases: React.FC = () => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const handleSelectCase = (id: string) => {
-    setSelectedId((prev) => (prev === id ? null : id));
+    setSelectedId(id);
   };
 
   const selectedCase = selectedId
@@ -18,8 +17,9 @@ const Cases = () => {
     : null;
 
   return (
-    <div className="container mx-auto px-4 py-6 h-[calc(100vh-80px)] overflow-y-auto">
+    <div className="container mx-auto px-4 py-6 h-[calc(100vh-80px)]">
       <VoiceOverlay />
+
       {/* Page Header */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-slate-900">Clinical Cases</h1>
@@ -29,7 +29,7 @@ const Cases = () => {
       </div>
 
       {/* Two-Column Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-6 h-full lg:h-[calc(100%-80px)]">
+      <div className="grid grid-cols-1 lg:grid-cols-[0.8fr_1fr] gap-6 h-full lg:h-[calc(100%-80px)]">
         {/* Left Column: List */}
         <div className="h-[400px] lg:h-full overflow-hidden">
           <CaseList
@@ -46,7 +46,7 @@ const Cases = () => {
           ) : (
             <div className="h-full flex flex-col items-center justify-center bg-white border border-slate-200 border-dashed rounded-lg p-8 text-center animate-in fade-in zoom-in-95 duration-300">
               <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4">
-                <FileBraces className="h-8 w-8 text-slate-300" />
+                <FileText className="h-8 w-8 text-slate-300" />
               </div>
               <h3 className="text-lg font-medium text-slate-900">
                 No Case Selected

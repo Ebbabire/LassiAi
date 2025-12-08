@@ -1,6 +1,16 @@
-import type { Case, ClinicalData } from "@/type";
+import type { Case, ClinicalData } from "@/type/case";
 
 export const mockCases: Case[] = [
+  {
+    id: "case_123",
+    species: "Feline",
+    name: "Mittens",
+    age: "10 years",
+    owner: "Jane Doe",
+    complaint: "Stranguria and hematuria - 3 day history.",
+    status: "New",
+    createdAt: "2025-01-01",
+  },
   {
     id: "C-2023-001",
     species: "Canine",

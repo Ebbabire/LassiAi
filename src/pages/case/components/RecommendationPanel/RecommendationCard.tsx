@@ -1,4 +1,4 @@
-import type { RecommendationItem } from "@/type";
+import type { RecommendationItem } from "@/type/case";
 
 interface RecommendationCardProps {
   item: RecommendationItem;

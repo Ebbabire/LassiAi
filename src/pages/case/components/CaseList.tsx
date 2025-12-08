@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 
-import type { Case } from "@/type";
+import type { Case } from "@/type/case";
 import { SortIcon } from "@/components/ui/SortIcon";
 import CaseItem from "./CaseItem";
 
@@ -43,7 +43,7 @@ const CaseList = ({ cases, onSelectCase, selectedId }: CaseListProps) => {
         </button>
       </div>
 
-      <div className="flex flex-col gap-1 divide-slate-100 flex-1">
+      <div className="flex flex-col gap-1 overflow-y-auto divide-slate-100 flex-1">
         {sortedCases.length === 0 ? (
           <div className="p-8 text-center text-slate-500 text-sm">
             No cases found.

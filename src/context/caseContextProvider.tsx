@@ -2,10 +2,13 @@ import { useState, type ReactNode } from "react";
 import { CaseContext } from "./caseContext";
 
 export const CaseProvider = ({ children }: { children: ReactNode }) => {
+  const [activeCaseId, setActiveCaseId] = useState<string | null>(null);
   const [expandedPanels, setExpandedPanels] = useState<Record<string, boolean>>(
     {
-      reasoning: true, // Default open
-      treatment: false,
+      patient: true,
+      reasoning: true,
+      treatment: true,
+      diagnostics: true,
       ops: false,
     }
   );
@@ -23,6 +26,8 @@ export const CaseProvider = ({ children }: { children: ReactNode }) => {
   return (
     <CaseContext.Provider
       value={{
+        activeCaseId,
+        setActiveCaseId,
         expandedPanels,
         togglePanel,
         activeReasoningTrace,

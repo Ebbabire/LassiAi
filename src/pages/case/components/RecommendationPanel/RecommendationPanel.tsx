@@ -3,12 +3,12 @@ import { useDebounce } from "@/hooks/useDebounce";
 
 import RecommendationsPanelLoading from "./RecommendationPanel_loading";
 import CaseSummay from "./CaseSummay";
-import { ProfileIntelPanel } from "./ProfileIntelPanel/ProfileIntelPanel";
-import { ReasoningPanel } from "./ReasoningPanel/ReasoningPanel";
-import { TreatmentPanel } from "./TreatmentPanel/TreatmentPanel";
-import { OpsIntelPanel } from "./OpsIntelPanel/OpsIntelPanel";
+import { ProfileIntelPanel } from "../CaseInelPanel/CaseInetPanel";
+import { ReasoningPanel } from "../ReasoningPanel/ReasoningPanel";
+import { TreatmentPanel } from "../TreatmentPanel/TreatmentPanel";
+import { OpsIntelPanel } from "../OpsIntelPanel/OpsIntelPanel";
 import { AlertTriangle } from "lucide-react";
-import { MOCKED_RECOMMENDATIONS } from "@/data";
+import { MOCKED_RECOMMENDATIONS } from "@/data/mockCases";
 
 const data = MOCKED_RECOMMENDATIONS;
 

@@ -1,5 +1,5 @@
 import { StatusBadge } from "@/components/ui/StatusBadge";
-import type { Case } from "@/type";
+import type { Case } from "@/type/case";
 import { ChevronRightIcon } from "lucide-react";
 
 interface CaseItemProps {
@@ -47,7 +47,11 @@ const CaseItem = ({ patientCase, onSelectCase, isSelected }: CaseItemProps) => {
         </p>
 
         <div className="flex items-center gap-2 mt-1 md:hidden">
-          <StatusBadge status={patientCase.status} />
+          <StatusBadge
+            label={patientCase.status}
+            variant={patientCase.status}
+          />
+
           <span className="text-xs text-slate-400">
             {patientCase.createdAt}
           </span>
@@ -56,7 +60,7 @@ const CaseItem = ({ patientCase, onSelectCase, isSelected }: CaseItemProps) => {
 
       {/* Right Column: Status, Date, Action (Visible on medium screens and up) */}
       <div className="hidden md:flex items-center gap-6 shrink-0 ml-4">
-        <StatusBadge status={patientCase.status} />
+        <StatusBadge label={patientCase.status} variant={patientCase.status} />
         <span className="text-xs text-slate-500 w-20 text-right">
           {patientCase.createdAt}
         </span>
