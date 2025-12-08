@@ -1,5 +1,4 @@
 import { useMemo, useEffect } from "react";
-import { GlobalIntelPanel } from "./GlobalIntelPanel/GlobalIntelPanel";
 import { useCaseContext } from "@/hooks/useCaseContext";
 import type { Case } from "@/type/case";
 import { CaseIntelPanel } from "./CaseInelPanel/CaseInetPanel";
@@ -29,12 +28,9 @@ export const CaseDetail = ({ caseData, onBack }: CaseDetailProps) => {
   // const aiResponse = useMemo(() => mockAIResponses[caseData.id] || null, [caseData.id]);
 
   return (
-    <div className="h-full bg-slate-50/50 border border-slate-200 rounded-lg shadow-sm flex flex-col overflow-hidden animate-in fade-in duration-300 relative">
-      {/* Global Intelligence Layer (Top) */}
-      <GlobalIntelPanel />
-
+    <div className="h-full bg-slate-50/50 border border-blue-200 rounded-lg shadow-sm flex flex-col overflow-hidden animate-in fade-in duration-300 relative">
       {/* Header */}
-      <div className="px-6 py-4 bg-white border-b border-slate-100 shrink-0 z-10 flex justify-between items-center shadow-sm">
+      <div className="px-6 py-4 bg-blue-800 border-b border-slate-100 shrink-0 z-10 flex justify-between items-center shadow-sm">
         <div className="flex items-center gap-3">
           {onBack && (
             <button
@@ -46,10 +42,10 @@ export const CaseDetail = ({ caseData, onBack }: CaseDetailProps) => {
             </button>
           )}
           <div>
-            <h1 className="text-lg font-bold text-slate-900 leading-tight">
+            <h1 className="text-lg font-bold text-slate-300 leading-tight">
               {caseData.name}
             </h1>
-            <span className="text-xs text-slate-400 font-mono">
+            <span className="text-xs text-slate-100 font-mono">
               #{caseData.id}
             </span>
           </div>
