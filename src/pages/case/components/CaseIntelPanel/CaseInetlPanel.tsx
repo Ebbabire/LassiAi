@@ -20,7 +20,7 @@ export const CaseIntelPanel = ({ bundle, isLoading }: CaseIntelPanelProps) => {
 
   return (
     <PanelShell
-      title="Patient Context"
+      title="Chief Complaint"
       variant="highlight"
       isExpanded={expandedPanels["patient"]}
       onToggle={() => togglePanel("patient")}
@@ -64,22 +64,26 @@ export const CaseIntelPanel = ({ bundle, isLoading }: CaseIntelPanelProps) => {
           {caseInfo.description || caseInfo.reasonForVisit}
         </p>
       </div>
-
-      <div className="flex flex-wrap gap-2">
-        {flags?.map((flag) => (
-          <StatusBadge
-            key={flag}
-            label={flag.replace("_", " ")}
-            variant="warning"
-          />
-        ))}
-        {imaging && imaging.length > 0 && (
-          <StatusBadge
-            label="Imaging Available"
-            variant="neutral"
-            className="border-dashed"
-          />
-        )}
+      <div className="flex flex-col gap-2">
+        <span className="text-xs font-bold uppercase tracking-wide">
+          Risk Flags
+        </span>
+        <div className="flex flex-wrap gap-2">
+          {flags?.map((flag) => (
+            <StatusBadge
+              key={flag}
+              label={flag.replace("_", " ")}
+              variant="warning"
+            />
+          ))}
+          {imaging && imaging.length > 0 && (
+            <StatusBadge
+              label="Imaging Available"
+              variant="neutral"
+              className="border-dashed"
+            />
+          )}
+        </div>
       </div>
     </PanelShell>
   );
