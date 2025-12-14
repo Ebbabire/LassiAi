@@ -17,7 +17,7 @@ const Cases = () => {
     : null;
 
   return (
-    <div className="container mx-auto px-4 py-6 h-[calc(100vh-80px)] overflow-y-auto">
+    <div className="container mx-auto px-4 py-6 h-[calc(100vh-80px)] overflow-y-auto scrollbar-thin scrollbar-thumb-[#2A2F33] scrollbar-track-transparent">
       <VoiceOverlay />
 
       {/* Page Header */}

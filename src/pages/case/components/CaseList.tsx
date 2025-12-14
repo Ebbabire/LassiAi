@@ -42,7 +42,7 @@ const CaseList = ({ cases, onSelectCase, selectedId }: CaseListProps) => {
         </button>
       </div>
 
-      <div className="flex flex-col gap-1 overflow-y-auto flex-1 bg-[#1A1D21] p-1">
+      <div className="flex flex-col gap-1 overflow-y-auto scrollbar-thin scrollbar-thumb-[#2A2F33] scrollbar-track-transparentflex-1 bg-[#1A1D21] p-1">
         {sortedCases.length === 0 ? (
           <div className="p-8 text-center text-[#9BA3AF] text-sm">
             No cases found.
