@@ -9,7 +9,7 @@ const Cases = () => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const handleSelectCase = (id: string) => {
-    setSelectedId(id);
+    setSelectedId((prev) => (prev === id ? null : id));
   };
 
   const selectedCase = selectedId
@@ -17,7 +17,7 @@ const Cases = () => {
     : null;
 
   return (
-    <div className="container mx-auto px-4 py-6 h-[calc(100vh-80px)] overflow-y-auto scrollbar-thin scrollbar-thumb-[#2A2F33] scrollbar-track-transparent">
+    <div className="px-4 sm:px-12 md:px-24 lg:px-16 xl:px-24 2xl:px-32  py-6 h-[calc(100vh-80px)] overflow-y-auto">
       <VoiceOverlay />
 
       {/* Page Header */}
@@ -31,7 +31,7 @@ const Cases = () => {
       </div>
 
       {/* Two-Column Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-[0.8fr_1fr] gap-6 h-full lg:h-[calc(100%-80px)]">
+      <div className="grid grid-cols-1 lg:grid-cols-[0.8fr_1fr] gap-6 h-full lg:h-[calc(100%-80px)] ">
         {/* Left Column: List */}
         <div className="h-[400px] lg:h-full overflow-hidden">
           <CaseList
@@ -42,7 +42,7 @@ const Cases = () => {
         </div>
 
         {/* Right Column: Detail Panel */}
-        <div className="lg:h-full h-[400px] overflow-hidden">
+        <div className="lg:h-full h-[400px] pb-4 overflow-hidden">
           {selectedCase ? (
             <CaseDetail caseData={selectedCase} />
           ) : (

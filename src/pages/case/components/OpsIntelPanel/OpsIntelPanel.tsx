@@ -27,10 +27,10 @@ export const OpsIntelPanel = () => {
         </svg>
       }
     >
-      <div className="text-center py-4">
-        <p className="text-sm text-[#9BA3AF]">
-          No operational flags for this case.
-        </p>
+      <div className="flex items-center justify-center border-2 border-dashed border-[#2A2F33] rounded-lg p-6 bg-[#0D0F12]">
+        <span className="text-sm text-[#9BA3AF] font-medium">
+          No AI Oprational Flags available for this case.
+        </span>
       </div>
     </PanelShell>
   );

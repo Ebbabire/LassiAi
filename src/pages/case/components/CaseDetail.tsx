@@ -4,14 +4,14 @@ import { useCaseContext } from "@/hooks/useCaseContext";
 
 // Components
 import { ReasoningPanel } from "./ReasoningPanel/ReasoningPanel";
-import { TreatmentPanel } from "./TreatmentPanel_v0/TreatmentPanel";
+import { TreatmentPanel } from "./TreatmentPanel/TreatmentPanel";
 import { OpsIntelPanel } from "./OpsIntelPanel/OpsIntelPanel";
-import { DiagnosticsPanel } from "./DiagnosticsPanel_v0/DiagnosticsPanel";
+import { DiagnosticsPanel } from "./DiagnosticsPanel/DiagnosticsPanel";
 
 // Mock Data Source (In real app, this would be a React Query hook)
-import { DiagnosticsAIResponses, mockAIResponses, mockBundles, TreatmentAIResponse } from "@/data/mockIntellegence";
 import { CaseIntelPanel } from "./CaseIntelPanel/CaseInetlPanel";
 import { StatusBadge } from "@/components/ui/StatusBadge";
+import { mockAIResponses, mockBundles } from "@/data/mockIntellegence";
 
 interface CaseDetailProps {
   caseData: Case;
@@ -32,17 +32,9 @@ export const CaseDetail = ({ caseData, onBack }: CaseDetailProps) => {
     () => mockAIResponses[caseData.id] || null,
     [caseData.id]
   );
-  const diagnosticsResponse = useMemo(
-    () => DiagnosticsAIResponses[caseData.id] || null,
-    [caseData.id]
-  );
-  const TreatmentResponse = useMemo(
-    () => TreatmentAIResponse[caseData.id] || null,
-    [caseData.id]
-  );
 
   return (
-    <div className="h-[400px] lg:h-full bg-[#0D0F12] border border-[#2A2F33] rounded-lg shadow-sm flex flex-col overflow-y-auto animate-in fade-in duration-300 relative">
+    <div className="h-[400px] lg:h-full scrollbar-thin scrollbar-thumb-[#2A2F33] scrollbar-track-transparent bg-[#0D0F12] border border-[#2A2F33] rounded-lg shadow-sm flex flex-col overflow-y-auto animate-in fade-in duration-300 relative">
       {/* Header */}
       <div className="px-6 py-4 bg-[#1A1D21] border-b border-[#2A2F33] shrink-0 z-10 flex justify-between items-center shadow-sm">
         <div className="flex items-center gap-3">
@@ -86,11 +78,11 @@ export const CaseDetail = ({ caseData, onBack }: CaseDetailProps) => {
         {bundle ? (
           <>
             <CaseIntelPanel bundle={bundle} />
-            <ReasoningPanel aiResponse={aiResponse} />
+            <ReasoningPanel reasoningResponse={aiResponse} />
             {/* <DiagnosticsPanel bundle={bundle} /> */}
-            <DiagnosticsPanel data={diagnosticsResponse} />
+            <DiagnosticsPanel diagnosticsResponse={aiResponse?.diagnostics} />
             {/* <TreatmentPanel aiResponse={aiResponse} /> */}
-            <TreatmentPanel data={TreatmentResponse} />
+            <TreatmentPanel treatmentResponse={aiResponse?.treatments} />
             <OpsIntelPanel />
           </>
         ) : (
