@@ -32,6 +32,7 @@ export const CaseProvider = ({ children }: { children: ReactNode }) => {
         togglePanel,
         activeReasoningTrace,
         setActiveReasoningTrace,
+        setExpandedPanels,
       }}
     >
       {children}

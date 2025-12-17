@@ -1,3 +1,6 @@
+import { useEffect } from "react";
+import { logEvent, type EventName } from "@/lib/telemetry";
+
 interface PanelShellProps {
   title: string;
   icon?: React.ReactNode;
@@ -7,6 +10,10 @@ interface PanelShellProps {
   variant?: "default" | "highlight";
   isExpanded?: boolean;
   onToggle?: () => void;
+
+  // Telemetry Props
+  telemetryLabel?: EventName;
+  caseId?: string | null;
 }
 
 export const PanelShell = ({
@@ -18,7 +25,16 @@ export const PanelShell = ({
   variant = "default",
   isExpanded = true,
   onToggle,
+  telemetryLabel,
+  caseId,
 }: PanelShellProps) => {
+  // Track expansion events
+  useEffect(() => {
+    if (isExpanded && telemetryLabel && caseId) {
+      logEvent(telemetryLabel, caseId);
+    }
+  }, [isExpanded, telemetryLabel, caseId]);
+
   return (
     <div
       className={`

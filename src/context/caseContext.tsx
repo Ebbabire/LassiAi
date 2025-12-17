@@ -7,6 +7,9 @@ interface CaseContextType {
   togglePanel: (panelId: string) => void;
   activeReasoningTrace: string | null;
   setActiveReasoningTrace: (id: string | null) => void;
+  setExpandedPanels: React.Dispatch<
+    React.SetStateAction<Record<string, boolean>>
+  >;
 }
 
 export const CaseContext = createContext<CaseContextType | undefined>(

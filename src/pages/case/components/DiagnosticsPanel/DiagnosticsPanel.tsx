@@ -4,7 +4,8 @@ import type { DiagnosticItem as DiagnosticItemType } from "../../../../type/inte
 
 import { PanelShell } from "@/components/ui/PanelShell";
 import { DiagnosticItem } from "./DiagnosticsItem";
-import { LucideMicroscope } from "lucide-react";
+import { CheckCircle2, LucideMicroscope } from "lucide-react";
+import { SuccessCard } from "@/components/ui/SuccessCard";
 
 export interface DiagnosticsPanelProps {
   diagnosticsResponse: DiagnosticItemType[];
@@ -12,23 +13,26 @@ export interface DiagnosticsPanelProps {
 export const DiagnosticsPanel = ({
   diagnosticsResponse,
 }: DiagnosticsPanelProps) => {
-  const { expandedPanels, togglePanel } = useCaseContext();
+  const { expandedPanels, togglePanel, activeCaseId } = useCaseContext();
 
   const diagnostics = diagnosticsResponse || [];
 
   return (
     <PanelShell
-      title="Diagnostic Recommendations"
+      title="Diagnostic Panel"
       isExpanded={expandedPanels["diagnostics"]}
       onToggle={() => togglePanel("diagnostics")}
       icon={<LucideMicroscope className="h-5 w-5 text-[#9BA3AF]" />}
+      telemetryLabel="diagnostics_panel_viewed"
+      caseId={activeCaseId}
     >
       {diagnostics.length === 0 ? (
-        <div className="flex items-center justify-center border-2 border-dashed border-[#2A2F33] rounded-lg p-6 bg-[#0D0F12]">
-          <span className="text-sm text-[#9BA3AF] font-medium">
-            No diagnostic recommendations.
-          </span>
-        </div>
+        <SuccessCard
+          title="No immediate diagnostics pending"
+          message="Standard monitoring protocols apply"
+          icon={<CheckCircle2 size={20} />}
+          variant="success"
+        />
       ) : (
         <div className="space-y-3">
           {diagnostics.map((item, idx) => (

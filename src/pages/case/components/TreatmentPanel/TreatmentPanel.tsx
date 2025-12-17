@@ -1,55 +1,64 @@
-import React, { useState } from "react";
-import { PanelShell } from "../../../../components/ui/PanelShell";
-import { Activity } from "lucide-react";
+import { useState } from "react";
+import { Activity, ShieldCheck } from "lucide-react";
 import { useCaseContext } from "@/hooks/useCaseContext";
 
 import type { TreatmentItem as TreatmentResponse } from "../../../../type/intelligence";
 import { TreatmentCard } from "./components/TreatmentCard";
 import { CalculationDialog } from "./components/CalculationDialog";
+import { PanelShell } from "@/components/ui/PanelShell";
+import { logEvent } from "@/lib/telemetry";
+import { SuccessCard } from "@/components/ui/SuccessCard";
 
 interface TreatmentPanelProps {
   treatmentResponse: TreatmentResponse[] | null;
 }
 
-export const TreatmentPanel: React.FC<TreatmentPanelProps> = ({
-  treatmentResponse,
-}) => {
+export const TreatmentPanel = ({ treatmentResponse }: TreatmentPanelProps) => {
   const [selectedTreatment, setSelectedTreatment] =
     useState<TreatmentResponse | null>(null);
 
   const hasRecommendations = treatmentResponse && treatmentResponse.length > 0;
 
-  const { expandedPanels, togglePanel } = useCaseContext();
-  const panelKey = "treatments";
-  const isExpanded = expandedPanels[panelKey];
+  const { expandedPanels, togglePanel, activeCaseId } = useCaseContext();
+  const isExpanded = expandedPanels["treatment"];
 
   const handleViewCalculation = (treatment: TreatmentResponse) => {
+    if (activeCaseId) {
+      logEvent("treatment_math_expanded", activeCaseId, {
+        drug: treatment.drugName,
+      });
+    }
     setSelectedTreatment(treatment);
   };
 
   return (
     <>
       <PanelShell
-        title="Treatment Recommendations"
+        title="Treatment Plan"
         icon={<Activity size={18} />}
         isExpanded={isExpanded}
-        onToggle={() => togglePanel(panelKey)}
+        onToggle={() => togglePanel("treatment")}
+        telemetryLabel="treatments_panel_viewed"
+        caseId={activeCaseId}
       >
-        {hasRecommendations ? (
-          treatmentResponse?.map((treatment, index) => (
-            <TreatmentCard
-              key={index}
-              treatment={treatment}
-              onViewCalculation={handleViewCalculation}
+        <div className="flex flex-col gap-3">
+          {hasRecommendations ? (
+            treatmentResponse?.map((treatment, index) => (
+              <TreatmentCard
+                key={index}
+                treatment={treatment}
+                onViewCalculation={handleViewCalculation}
+              />
+            ))
+          ) : (
+            <SuccessCard
+              title="No active pharmacological interventions"
+              message="Continue current supportive care"
+              icon={<ShieldCheck size={20} />}
+              variant="calm"
             />
-          ))
-        ) : (
-          <div className="flex items-center justify-center border-2 border-dashed border-[#2A2F33] rounded-lg p-6 bg-[#0D0F12]">
-            <span className="text-sm text-[#9BA3AF] font-medium">
-              No AI Treatment Recommendations available for this case.
-            </span>
-          </div>
-        )}
+          )}
+        </div>
       </PanelShell>
 
       {selectedTreatment && (

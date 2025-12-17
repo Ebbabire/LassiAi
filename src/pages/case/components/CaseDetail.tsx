@@ -12,14 +12,21 @@ import { DiagnosticsPanel } from "./DiagnosticsPanel/DiagnosticsPanel";
 import { CaseIntelPanel } from "./CaseIntelPanel/CaseInetlPanel";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { mockAIResponses, mockBundles } from "@/data/mockIntellegence";
+import { logEvent } from "@/lib/telemetry";
 
 interface CaseDetailProps {
   caseData: Case;
-  onBack?: () => void;
 }
 
-export const CaseDetail = ({ caseData, onBack }: CaseDetailProps) => {
-  const { setActiveCaseId } = useCaseContext();
+export const CaseDetail = ({ caseData }: CaseDetailProps) => {
+  const { setActiveCaseId, setExpandedPanels } = useCaseContext();
+
+  // Telemetry: Log Case Opened
+  useEffect(() => {
+    if (caseData.id) {
+      logEvent("case_opened", caseData.id);
+    }
+  }, [caseData.id]);
 
   // Sync active case with context
   useEffect(() => {
@@ -33,32 +40,30 @@ export const CaseDetail = ({ caseData, onBack }: CaseDetailProps) => {
     [caseData.id]
   );
 
+  // Auto-Surface Logic: Automatically open relevant panels based on data presence
+  useEffect(() => {
+    if (aiResponse) {
+      const hasTreatment =
+        aiResponse.treatments && aiResponse.treatments.length > 0;
+      const hasDiagnostics =
+        aiResponse.diagnostics && aiResponse.diagnostics.length > 0;
+
+      // Set the layout in ONE batch update to prevent race conditions
+      setExpandedPanels((prev) => ({
+        ...prev,
+
+        // Requirement: Auto-surface if data exists
+        treatment: hasTreatment,
+        diagnostics: hasDiagnostics,
+      }));
+    }
+  }, [aiResponse, setExpandedPanels]);
+
   return (
     <div className="h-[400px] lg:h-full scrollbar-thin scrollbar-thumb-[#2A2F33] scrollbar-track-transparent bg-[#0D0F12] border border-[#2A2F33] rounded-lg shadow-sm flex flex-col overflow-y-auto animate-in fade-in duration-300 relative">
       {/* Header */}
       <div className="px-6 py-4 bg-[#1A1D21] border-b border-[#2A2F33] shrink-0 z-10 flex justify-between items-center shadow-sm">
         <div className="flex items-center gap-3">
-          {onBack && (
-            <button
-              title="back"
-              onClick={onBack}
-              className="p-1.5 hover:bg-[#2A2F33] rounded-full text-[#9BA3AF] transition-colors"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="m15 18-6-6 6-6" />
-              </svg>
-            </button>
-          )}
           <div>
             <h1 className="text-lg font-bold text-[#F2F2F2] leading-tight">
               {caseData.name}
@@ -79,9 +84,7 @@ export const CaseDetail = ({ caseData, onBack }: CaseDetailProps) => {
           <>
             <CaseIntelPanel bundle={bundle} />
             <ReasoningPanel reasoningResponse={aiResponse} />
-            {/* <DiagnosticsPanel bundle={bundle} /> */}
             <DiagnosticsPanel diagnosticsResponse={aiResponse?.diagnostics} />
-            {/* <TreatmentPanel aiResponse={aiResponse} /> */}
             <TreatmentPanel treatmentResponse={aiResponse?.treatments} />
             <OpsIntelPanel />
           </>

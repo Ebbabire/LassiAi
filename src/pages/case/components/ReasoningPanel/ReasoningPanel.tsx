@@ -9,7 +9,7 @@ interface ReasoningPanelProps {
 }
 
 export const ReasoningPanel = ({ reasoningResponse }: ReasoningPanelProps) => {
-  const { expandedPanels, togglePanel } = useCaseContext();
+  const { expandedPanels, togglePanel, activeCaseId } = useCaseContext();
   const hasRecommendations =
     reasoningResponse &&
     reasoningResponse.differentials &&
@@ -28,6 +28,8 @@ export const ReasoningPanel = ({ reasoningResponse }: ReasoningPanelProps) => {
       isExpanded={expandedPanels["reasoning"]}
       onToggle={() => togglePanel("reasoning")}
       icon={<BookOpen size={18} />}
+      telemetryLabel="reasoning_panel_viewed"
+      caseId={activeCaseId}
     >
       {hasRecommendations ? (
         <div className="space-y-4">
