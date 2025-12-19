@@ -1,7 +1,7 @@
 import { PanelShell } from "@/components/ui/PanelShell";
 import { useCaseContext } from "@/hooks/useCaseContext";
 import type { ClinicalAIResponse } from "@/type/intelligence";
-import { BookOpen, TriangleAlert } from "lucide-react";
+import { AlertOctagon, BookOpen, ListOrdered } from "lucide-react";
 
 interface ReasoningPanelProps {
   reasoningResponse: ClinicalAIResponse | null;
@@ -47,43 +47,61 @@ export const ReasoningPanel = ({ reasoningResponse }: ReasoningPanelProps) => {
             </p>
           </div>
 
-          {/* Red Flags */}
-          {reasoningResponse.redFlags &&
-            reasoningResponse.redFlags.length > 0 && (
-              <div className="bg-[#0D0F12] border border-[#EB5757]/40 p-3 rounded-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <TriangleAlert className="text-[#EB5757] size-4" />
-                  <span className="text-xs font-bold text-[#EB5757] uppercase">
-                    Red Flags
-                  </span>
-                </div>
-                <ul className="list-disc list-inside text-sm text-[#F2F2F2] space-y-1">
-                  {reasoningResponse.redFlags.map((flag, idx) => (
-                    <li key={idx}>{flag}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
           {/* Differentials List */}
           {otherDx.length > 0 && (
-            <div className="border-t border-[#2A2F33] pt-3">
-              <span className="text-xs font-semibold text-[#9BA3AF] uppercase mb-2 block">
-                Differentials
-              </span>
-              <ul className="space-y-2">
+            <div className="space-y-3">
+              <div className="flex items-center gap-2 border-b border-[#2A2F33] pb-2">
+                <ListOrdered size={14} className="text-[#9BA3AF]" />
+                <span className="text-xs font-bold text-[#9BA3AF] uppercase tracking-wider">
+                  Ranked Differentials
+                </span>
+              </div>
+              <div className="grid gap-2">
                 {otherDx.map((dx, idx) => (
-                  <li
+                  <div
                     key={idx}
-                    className="flex items-center text-sm text-[#F2F2F2]"
+                    className="flex items-center gap-3 p-2.5 rounded-md bg-[#0D0F12] border border-[#2A2F33] hover:border-[#2D9CDB]/30 transition-colors group"
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#2A2F33] mr-2"></span>
-                    {dx}
-                  </li>
+                    <span className="flex items-center justify-center w-5 h-5 rounded bg-[#2A2F33] text-[#9BA3AF] text-[10px] font-mono group-hover:text-[#2D9CDB]">
+                      {idx + 2}
+                    </span>
+                    <span className="text-sm text-[#F2F2F2] font-medium">
+                      {dx}
+                    </span>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </div>
           )}
+
+          {/* Safety Protocols (Red Flags) - Referral Thresholds */}
+          {reasoningResponse.redFlags &&
+            reasoningResponse.redFlags.length > 0 && (
+              <div className="bg-[#EB5757]/5 border border-[#EB5757]/30 rounded-lg p-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <AlertOctagon size={16} className="text-[#EB5757]" />
+                  <span className="text-xs font-bold text-[#EB5757] uppercase tracking-wider">
+                    Safety Protocols / Referral Thresholds
+                  </span>
+                </div>
+                <div className="space-y-2">
+                  {reasoningResponse.redFlags.map((flag, idx) => (
+                    <div key={idx} className="flex gap-2.5 items-start">
+                      <div className="mt-1.5 w-1 h-1 rounded-full bg-[#EB5757] shrink-0" />
+                      <p className="text-sm text-[#F2F2F2] leading-snug">
+                        {flag}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-4 pt-3 border-t border-[#EB5757]/20">
+                  <p className="text-[10px] text-[#EB5757] font-medium uppercase text-center tracking-wider">
+                    Presence of these markers suggests immediate specialist
+                    referral or emergency escalation.
+                  </p>
+                </div>
+              </div>
+            )}
         </div>
       ) : (
         <div className="flex items-center justify-center border-2 border-dashed border-[#2A2F33] rounded-lg p-6 bg-[#0D0F12]">

@@ -1,6 +1,6 @@
 import { memo } from "react";
 import type { TreatmentItem } from "@/type/intelligence";
-import { Calculator, TriangleAlert } from "lucide-react";
+import { AlertOctagon, Calculator, Info } from "lucide-react";
 
 interface TreatmentItemProps {
   treatment: TreatmentItem;
@@ -12,57 +12,70 @@ export const TreatmentCard = memo(
     return (
       <div className="border border-[#2A2F33] rounded-lg bg-[#0D0F12] overflow-hidden group hover:border-[#F2C94C]/30 transition-colors">
         {/* Header: Drug Name + Protocol Source */}
-        <div className="p-3">
-          <div className="flex justify-between items-start mb-1">
-            <div className="flex items-center gap-2">
-              <h4 className="text-base font-bold text-[#F2F2F2]">
-                {treatment.drugName}
-              </h4>
+        <div className="p-4">
+          <div className="flex justify-between items-start mb-2">
+            <div className="flex flex-col gap-1">
+              <div className="flex items-center gap-2">
+                <h4 className="text-base font-bold text-[#F2F2F2]">
+                  {treatment.drugName}
+                </h4>
+              </div>
             </div>
             {treatment.calculation && (
               <button
-                className="text-[#9BA3AF] hover:text-[#F2F2F2] transition-colors rounded hover:bg-[#2A2F33] flex items-center gap-2 hover:cursor-pointer px-2 py-2"
-                title="View Math & Source"
+                className="text-[#9BA3AF] hover:text-[#2D9CDB] transition-colors cursor-pointer p-1.5 rounded bg-[#2A2F33]/50 hover:bg-[#2A2F33] flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider"
                 onClick={() => onViewCalculation(treatment)}
               >
-                <Calculator className="size-4" />
-                <span className="text-xs">View Math & Source</span>
+                <Calculator size={14} />
+                Verify Math
               </button>
             )}
           </div>
 
-          {/* Rationale & Display Text */}
-          <div className="text-sm text-[#F2F2F2] font-medium mb-1">
+          {/* Main Instruction */}
+          <div className="text-sm text-[#F2F2F2] font-semibold mb-3 bg-[#1A1D21] p-2.5 rounded border border-[#2A2F33]">
             {treatment.displayText}
           </div>
-          <p className="text-xs text-[#9BA3AF] italic mt-2">
-            Why: "{treatment.rationale}"
-          </p>
 
-          {/* Dose Pills */}
+          {/* Rationale (The "Why") */}
+          <div className="flex gap-2 mb-4">
+            <Info size={14} className="text-[#9BA3AF] mt-0.5 shrink-0" />
+            <p className="text-sm text-[#9BA3AF] font-medium leading-snug">
+              <span className="text-[#F2F2F2]/70">Rationale:</span>{" "}
+              {treatment.rationale}
+            </p>
+          </div>
+
+          {/* Dose Metadata Pills */}
           {treatment.dose && (
-            <div className="flex flex-wrap gap-2 mt-4">
-              <span className="text-[12px] font-mono text-[#abb3c0] bg-[#2A2F33] px-2 py-0.5 rounded border border-[#2A2F33]">
-                {treatment.dose.mgPerKg} mg/kg
-              </span>
-              <span className="text-[12px] font-mono text-[#9BA3AF] bg-[#2A2F33] px-2 py-0.5 rounded border border-[#2A2F33]">
+            <div className="flex flex-wrap gap-2">
+              <div className="flex items-center gap-1.5 px-2 py-1 bg-[#1A1D21] border border-[#2A2F33] rounded text-[10px] font-mono text-[#F2F2F2]">
+                <span className="text-[#9BA3AF]">DOSE:</span>{" "}
+                {treatment.dose.mgPerKg}mg/kg
+              </div>
+              <div className="flex items-center gap-1.5 px-2 py-1 bg-[#1A1D21] border border-[#2A2F33] rounded text-[10px] font-mono text-[#F2F2F2]">
+                <span className="text-[#9BA3AF]">FREQ:</span>{" "}
                 {treatment.dose.frequency}
-              </span>
-              <span className="text-[12px] font-mono text-[#9BA3AF] bg-[#2A2F33] px-2 py-0.5 rounded border border-[#2A2F33]">
-                {treatment.dose.durationDays} days
-              </span>
-              <span className="text-[12px] font-mono text-[#9BA3AF] bg-[#2A2F33] px-2 py-0.5 rounded border border-[#2A2F33]">
+              </div>
+              <div className="flex items-center gap-1.5 px-2 py-1 bg-[#1A1D21] border border-[#2A2F33] rounded text-[10px] font-mono text-[#F2F2F2]">
+                <span className="text-[#9BA3AF]">ROUTE:</span>{" "}
                 {treatment.dose.route}
-              </span>
+              </div>
             </div>
           )}
         </div>
 
         {/* Warnings Strip */}
         {treatment.warnings && treatment.warnings.length > 0 && (
-          <div className="bg-[#F2C94C]/10 border-t border-[#F2C94C]/20 px-3 py-1.5 flex items-start gap-2">
-            <TriangleAlert className="size-3 text-[#F2C94C]" />
-            <div className="text-xs text-[#F2C94C] font-medium">
+          <div className="bg-[#EB5757]/10 border-t border-[#EB5757]/20 px-4 py-2.5 flex items-start gap-2.5">
+            <AlertOctagon
+              size={14}
+              className="text-[#EB5757] mt-0.5 shrink-0"
+            />
+            <div className="text-[11px] text-[#EB5757] font-semibold leading-tight">
+              <span className="uppercase tracking-widest text-[9px] block mb-0.5">
+                Safety Check
+              </span>
               {treatment.warnings.join(" • ")}
             </div>
           </div>
