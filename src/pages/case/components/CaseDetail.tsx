@@ -1,6 +1,7 @@
 import { useMemo, useEffect } from "react";
 import type { Case } from "@/type/case";
 import { useCaseContext } from "@/hooks/useCaseContext";
+import { useIsMobile } from "@/hooks/useMediaQuery";
 
 // Components
 import { ReasoningPanel } from "./ReasoningPanel/ReasoningPanel";
@@ -20,6 +21,7 @@ interface CaseDetailProps {
 
 export const CaseDetail = ({ caseData }: CaseDetailProps) => {
   const { setActiveCaseId, setExpandedPanels } = useCaseContext();
+  const isMobile = useIsMobile();
 
   // Telemetry: Log Case Opened
   useEffect(() => {
@@ -41,6 +43,7 @@ export const CaseDetail = ({ caseData }: CaseDetailProps) => {
   );
 
   // Auto-Surface Logic: Automatically open relevant panels based on data presence
+  // On mobile: collapse more aggressively to reduce scrolling
   useEffect(() => {
     if (aiResponse) {
       const hasTreatment =
@@ -51,18 +54,20 @@ export const CaseDetail = ({ caseData }: CaseDetailProps) => {
       // Set the layout in ONE batch update to prevent race conditions
       setExpandedPanels((prev) => ({
         ...prev,
-
-        // Requirement: Auto-surface if data exists
-        treatment: hasTreatment,
-        diagnostics: hasDiagnostics,
+        // On mobile: only expand patient panel by default, collapse others
+        // On desktop: auto-surface if data exists
+        patient: true,
+        reasoning: !isMobile,
+        treatment: isMobile ? false : hasTreatment,
+        diagnostics: isMobile ? false : hasDiagnostics,
       }));
     }
-  }, [aiResponse, setExpandedPanels]);
+  }, [aiResponse, setExpandedPanels, isMobile]);
 
   return (
     <div className="h-[400px] lg:h-full scrollbar-thin scrollbar-thumb-[#2A2F33] scrollbar-track-transparent bg-[#0D0F12] border border-[#2A2F33] rounded-lg shadow-sm flex flex-col overflow-y-auto animate-in fade-in duration-300 relative">
       {/* Header */}
-      <div className="px-6 py-4 bg-[#1A1D21] border-b border-[#2A2F33] shrink-0 z-10 flex justify-between items-center shadow-sm">
+      <div className="px-4 md:px-6 py-4 bg-[#1A1D21] border-b border-[#2A2F33] shrink-0 z-10 flex justify-between items-center shadow-sm">
         <div className="flex items-center gap-3">
           <div>
             <h1 className="text-lg font-bold text-[#F2F2F2] leading-tight">
@@ -79,7 +84,7 @@ export const CaseDetail = ({ caseData }: CaseDetailProps) => {
       </div>
 
       {/* Scrollable Panel Area */}
-      <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 scrollbar-thin scrollbar-thumb-[#2A2F33] scrollbar-track-transparent">
+      <div className="flex-1 overflow-y-auto p-3 md:p-6 space-y-3 md:space-y-4 scrollbar-thin scrollbar-thumb-[#2A2F33] scrollbar-track-transparent">
         {bundle ? (
           <>
             <CaseIntelPanel bundle={bundle} />

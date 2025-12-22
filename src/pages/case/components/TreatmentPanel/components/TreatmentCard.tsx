@@ -23,7 +23,7 @@ export const TreatmentCard = memo(
             </div>
             {treatment.calculation && (
               <button
-                className="text-[#9BA3AF] hover:text-[#2D9CDB] transition-colors cursor-pointer p-1.5 rounded bg-[#2A2F33]/50 hover:bg-[#2A2F33] flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider"
+                className="text-[#9BA3AF] hover:text-[#2D9CDB] active:text-[#2D9CDB] transition-colors cursor-pointer p-3 md:p-1.5 rounded bg-[#2A2F33]/50 hover:bg-[#2A2F33] active:bg-[#2A2F33] flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider min-h-[44px] md:min-h-0"
                 onClick={() => onViewCalculation(treatment)}
               >
                 <Calculator size={14} />

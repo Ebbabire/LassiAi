@@ -34,7 +34,7 @@ export const StatusBadge = ({
 
   return (
     <span
-      className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium ${style} ${className}`}
+      className={`inline-flex items-center px-2.5 py-1 md:px-2 md:py-0.5 rounded text-[11px] font-medium ${style} ${className}`}
     >
       {label}
     </span>

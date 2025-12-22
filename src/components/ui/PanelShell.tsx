@@ -38,7 +38,7 @@ export const PanelShell = ({
   return (
     <div
       className={`
-        bg-[#1A1D21] border rounded-lg shadow-sm mb-4 overflow-hidden transition-all duration-200
+        bg-[#1A1D21] border rounded-lg shadow-sm mb-3 md:mb-4 overflow-hidden transition-all duration-200
         ${
           variant === "highlight"
             ? "border-[#F2C94C]/30 ring-1 ring-[#F2C94C]/10"
@@ -50,13 +50,13 @@ export const PanelShell = ({
       <div
         onClick={onToggle}
         className={`
-          px-4 py-3 border-b flex items-center justify-between
+          px-4 py-4 md:py-3 border-b flex items-center justify-between min-h-[48px] md:min-h-0
           ${
             variant === "highlight"
               ? "bg-[#F2C94C]/5 border-[#F2C94C]/20"
               : "bg-[#1A1D21] border-[#2A2F33]"
           }
-          ${onToggle ? "cursor-pointer hover:bg-[#2A2F33]" : ""}
+          ${onToggle ? "cursor-pointer hover:bg-[#2A2F33] active:bg-[#2A2F33]" : ""}
       `}
       >
         <div className="flex items-center gap-2.5">
@@ -88,8 +88,7 @@ export const PanelShell = ({
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
+                className="w-5 h-5 md:w-4 md:h-4"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"

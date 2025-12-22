@@ -1,12 +1,16 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { VoiceOverlay } from "@/components/intel/VoiceOverlay";
 import CaseList from "./components/CaseList";
 import { CaseDetail } from "./components/CaseDetail";
+import { MobileStatusBar } from "./components/MobileStatusBar";
+import { useIsMobile } from "@/hooks/useMediaQuery";
 
 import { mockCases } from "@/data/mockCases";
+import { mockAIResponses } from "@/data/mockIntellegence";
 
 const Cases = () => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const isMobile = useIsMobile();
 
   const handleSelectCase = (id: string) => {
     setSelectedId((prev) => (prev === id ? null : id));
@@ -16,9 +20,29 @@ const Cases = () => {
     ? mockCases.find((c) => c.id === selectedId)
     : null;
 
+  // Get AI response for mobile status bar
+  const aiResponse = useMemo(
+    () => (selectedId ? mockAIResponses[selectedId] || null : null),
+    [selectedId]
+  );
+
+  // Calculate status bar height for layout offset
+  const hasEscalation = aiResponse?.redFlags && aiResponse.redFlags.length > 0;
+  const statusBarHeight = hasEscalation ? "pt-[120px]" : "pt-[52px]";
+
   return (
-    <div className="px-4 sm:px-12 md:px-24 lg:px-16 xl:px-24 2xl:px-32  py-6 h-[calc(100vh-80px)] overflow-y-auto">
-      <VoiceOverlay />
+    <>
+      {/* Mobile Fixed Status Bar */}
+      {isMobile && selectedCase && (
+        <MobileStatusBar caseData={selectedCase} aiResponse={aiResponse} />
+      )}
+
+      <div
+        className={`px-4 sm:px-12 md:px-24 lg:px-16 xl:px-24 2xl:px-32 py-6 h-[calc(100vh-80px)] overflow-y-auto ${
+          isMobile && selectedCase ? statusBarHeight : ""
+        }`}
+      >
+        <VoiceOverlay />
 
       {/* Page Header */}
       <div className="mb-6">
@@ -74,7 +98,8 @@ const Cases = () => {
           )}
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 
