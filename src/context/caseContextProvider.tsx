@@ -5,7 +5,7 @@ export const CaseProvider = ({ children }: { children: ReactNode }) => {
   const [activeCaseId, setActiveCaseId] = useState<string | null>(null);
   const [expandedPanels, setExpandedPanels] = useState<Record<string, boolean>>(
     {
-      patient: true,
+      patient: false,
       reasoning: false,
       treatment: false,
       diagnostics: false,

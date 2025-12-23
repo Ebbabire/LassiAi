@@ -1,7 +1,6 @@
 import { useMemo, useEffect } from "react";
 import type { Case } from "@/type/case";
 import { useCaseContext } from "@/hooks/useCaseContext";
-import { useIsMobile } from "@/hooks/useMediaQuery";
 
 // Components
 import { ReasoningPanel } from "./ReasoningPanel/ReasoningPanel";
@@ -20,8 +19,7 @@ interface CaseDetailProps {
 }
 
 export const CaseDetail = ({ caseData }: CaseDetailProps) => {
-  const { setActiveCaseId, setExpandedPanels } = useCaseContext();
-  const isMobile = useIsMobile();
+  const { setActiveCaseId } = useCaseContext();
 
   // Telemetry: Log Case Opened
   useEffect(() => {
@@ -41,28 +39,6 @@ export const CaseDetail = ({ caseData }: CaseDetailProps) => {
     () => mockAIResponses[caseData.id] || null,
     [caseData.id]
   );
-
-  // Auto-Surface Logic: Automatically open relevant panels based on data presence
-  // On mobile: collapse more aggressively to reduce scrolling
-  useEffect(() => {
-    if (aiResponse) {
-      const hasTreatment =
-        aiResponse.treatments && aiResponse.treatments.length > 0;
-      const hasDiagnostics =
-        aiResponse.diagnostics && aiResponse.diagnostics.length > 0;
-
-      // Set the layout in ONE batch update to prevent race conditions
-      setExpandedPanels((prev) => ({
-        ...prev,
-        // On mobile: only expand patient panel by default, collapse others
-        // On desktop: auto-surface if data exists
-        patient: true,
-        reasoning: !isMobile,
-        treatment: isMobile ? false : hasTreatment,
-        diagnostics: isMobile ? false : hasDiagnostics,
-      }));
-    }
-  }, [aiResponse, setExpandedPanels, isMobile]);
 
   return (
     <div className="h-[400px] lg:h-full scrollbar-thin scrollbar-thumb-[#2A2F33] scrollbar-track-transparent bg-[#0D0F12] border border-[#2A2F33] rounded-lg shadow-sm flex flex-col overflow-y-auto animate-in fade-in duration-300 relative">
