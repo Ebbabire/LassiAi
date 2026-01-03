@@ -94,7 +94,7 @@ const CaseItem = ({ patientCase, onSelectCase, isSelected }: CaseItemProps) => {
       {/* Mobile Arrow only */}
       <div
         className={`md:hidden ml-2 ${
-          isSelected ? "text-[#F2C94C]" : "text-[#2A2F33]"
+          isSelected ? "text-[#F2C94C]" : "text-[#525c64]"
         }`}
       >
         <ChevronRight size={16} />
