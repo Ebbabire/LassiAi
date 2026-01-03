@@ -20,7 +20,6 @@ const Cases = () => {
     ? mockCases.find((c) => c.id === selectedId)
     : null;
 
-  // Get AI response for mobile status bar
   const aiResponse = useMemo(
     () => (selectedId ? mockAIResponses[selectedId] || null : null),
     [selectedId]
@@ -55,7 +54,7 @@ const Cases = () => {
         </div>
 
         {/* Two-Column Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-[0.8fr_1fr] gap-6 h-full lg:h-[calc(100%-80px)] ">
+        <div className="grid grid-cols-1 lg:grid-cols-[0.8fr_1fr] gap-6 h-full lg:h-[calc(100%-80px)]">
           {/* Left Column: List (shows second on mobile) */}
           <div className="h-[400px] lg:h-full overflow-hidden order-2 lg:order-1">
             <CaseList

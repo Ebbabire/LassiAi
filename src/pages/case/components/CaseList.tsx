@@ -8,7 +8,6 @@ interface CaseListProps {
 }
 
 const CaseList = ({ cases, onSelectCase, selectedId }: CaseListProps) => {
-  // Backend authority: render list exactly as provided, no client-side sorting
   return (
     <div className="w-full bg-[#1A1D21] border border-[#2A2F33] rounded-lg shadow-sm h-full overflow-hidden flex flex-col">
       {/* Header */}
