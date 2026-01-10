@@ -90,7 +90,10 @@ export const CaseDetail = ({ caseData }: CaseDetailProps) => {
             <CaseIntelPanel bundle={bundle} nextSteps={aiResponse?.nextSteps} />
             <ReasoningPanel reasoningResponse={aiResponse} />
             <DiagnosticsPanel diagnosticsResponse={aiResponse?.diagnostics} />
-            <TreatmentPanel treatmentResponse={aiResponse?.treatments} />
+            <TreatmentPanel
+              treatmentResponse={aiResponse?.treatments}
+              progressionMode={aiResponse?.progressionMode}
+            />
             <OpsIntelPanel />
           </>
         ) : (

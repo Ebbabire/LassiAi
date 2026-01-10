@@ -2,18 +2,26 @@ import { useState } from "react";
 import { Activity, ShieldCheck } from "lucide-react";
 import { useCaseContext } from "@/hooks/useCaseContext";
 
-import type { TreatmentItem as TreatmentResponse } from "../../../../type/intelligence";
+import type {
+  TreatmentItem as TreatmentResponse,
+  ProgressionMode,
+} from "../../../../type/intelligence";
 import { TreatmentCard } from "./components/TreatmentCard";
 import { CalculationDialog } from "./components/CalculationDialog";
+import { OperationalReferenceBlock } from "./components/OperationalReferenceBlock";
 import { PanelShell } from "@/components/ui/PanelShell";
 import { logEvent } from "@/lib/telemetry";
 import { SuccessCard } from "@/components/ui/SuccessCard";
 
 interface TreatmentPanelProps {
   treatmentResponse: TreatmentResponse[] | null;
+  progressionMode?: ProgressionMode;
 }
 
-export const TreatmentPanel = ({ treatmentResponse }: TreatmentPanelProps) => {
+export const TreatmentPanel = ({
+  treatmentResponse,
+  progressionMode,
+}: TreatmentPanelProps) => {
   const [selectedTreatment, setSelectedTreatment] =
     useState<TreatmentResponse | null>(null);
 
@@ -21,6 +29,10 @@ export const TreatmentPanel = ({ treatmentResponse }: TreatmentPanelProps) => {
 
   const { expandedPanels, togglePanel, activeCaseId } = useCaseContext();
   const isExpanded = expandedPanels["treatment"];
+
+  // Only show operational reference in ADVANCE or PIVOT modes
+  const showOperationalReference =
+    progressionMode === "ADVANCE" || progressionMode === "PIVOT";
 
   const handleViewCalculation = (treatment: TreatmentResponse) => {
     if (activeCaseId) {
@@ -44,11 +56,18 @@ export const TreatmentPanel = ({ treatmentResponse }: TreatmentPanelProps) => {
         <div className="flex flex-col gap-3">
           {hasRecommendations ? (
             treatmentResponse?.map((treatment, index) => (
-              <TreatmentCard
-                key={index}
-                treatment={treatment}
-                onViewCalculation={handleViewCalculation}
-              />
+              <div key={index}>
+                <TreatmentCard
+                  treatment={treatment}
+                  onViewCalculation={handleViewCalculation}
+                />
+                {/* Operational Reference Block - only in ADVANCE/PIVOT modes when data present */}
+                {showOperationalReference && treatment.operationalReference && (
+                  <OperationalReferenceBlock
+                    data={treatment.operationalReference}
+                  />
+                )}
+              </div>
             ))
           ) : (
             <SuccessCard

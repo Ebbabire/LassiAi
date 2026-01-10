@@ -38,7 +38,43 @@ export interface DiagnosticItem {
   recommendedByAI: boolean; // Triggers yellow accent
 }
 
-// 3. Treatment Item
+// 3. Operational Reference (structured clinical reference data)
+export interface OperationalReference {
+  // Dosing parameters
+  dosing?: {
+    dose: string;
+    route: string;
+    frequency: string;
+    duration?: string;
+  };
+  // Timing checkpoints
+  timing?: {
+    recheckInterval?: string;
+    monitoringWindow?: string;
+    criticalCheckpoints?: string[];
+  };
+  // Reference values/ranges
+  referenceValues?: {
+    label: string;
+    target: string;
+    unit?: string;
+  }[];
+  // Patient-specific calculations
+  calculations?: {
+    label: string;
+    value: string;
+    formula?: string;
+  }[];
+  // Contraindications/precautions
+  contraindications?: string[];
+  // Contact/escalation info
+  escalation?: {
+    contact?: string;
+    threshold?: string;
+  };
+}
+
+// 4. Treatment Item
 export interface TreatmentItem {
   drugName: string;
   displayText: string; // "12.5 mg/kg PO q12h..."
@@ -63,9 +99,10 @@ export interface TreatmentItem {
     url?: string;
   };
   warnings?: string[];
+  operationalReference?: OperationalReference;
 }
 
-// 4. Main AI Response
+// 5. Main AI Response
 export interface ClinicalAIResponse {
   summary: string;
   differentials: string[];

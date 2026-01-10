@@ -67,6 +67,7 @@ export const mockBundles: Record<string, CaseBundleV1> = {
 
 export const mockAIResponses: Record<string, ClinicalAIResponse> = {
   case_123: {
+    progressionMode: "ADVANCE",
     summary:
       "Clinical presentation and urinalysis consistent with bacterial cystitis.",
     differentials: [
@@ -153,6 +154,43 @@ export const mockAIResponses: Record<string, ClinicalAIResponse> = {
           "Avoid in patients with history of severe beta-lactam allergy.",
           "Monitor renal function in older cats.",
         ],
+        operationalReference: {
+          dosing: {
+            dose: "56.25 mg",
+            route: "PO",
+            frequency: "q12h",
+            duration: "10 days",
+          },
+          timing: {
+            recheckInterval: "10-14 days post-completion",
+            monitoringWindow: "48-72h for clinical response",
+            criticalCheckpoints: ["Day 3", "Day 7", "Day 14"],
+          },
+          referenceValues: [
+            { label: "USG Target", target: ">1.035", unit: "" },
+            { label: "WBC (urine)", target: "<5", unit: "HPF" },
+          ],
+          calculations: [
+            {
+              label: "Per Dose",
+              value: "56.25 mg",
+              formula: "4.5kg × 12.5mg/kg",
+            },
+            {
+              label: "Total Course",
+              value: "20 tablets",
+              formula: "2/day × 10d",
+            },
+          ],
+          contraindications: [
+            "Severe beta-lactam allergy",
+            "Concurrent nephrotoxic agents",
+          ],
+          escalation: {
+            threshold: "No improvement at 72h or worsening symptoms",
+            contact: "Internal Medicine: ext. 2240",
+          },
+        },
       },
       {
         drugName: "Gabapentin",
@@ -182,6 +220,7 @@ export const mockAIResponses: Record<string, ClinicalAIResponse> = {
     ],
   },
   "C-2023-001": {
+    progressionMode: "PIVOT",
     summary:
       "Acute vomiting presentation consistent with gastritis/dietary indiscretion or pancreatitis. Initial diagnostics to guide management with supportive care approach.",
     differentials: [
@@ -249,6 +288,28 @@ export const mockAIResponses: Record<string, ClinicalAIResponse> = {
         rationale: "Antiemetic for vomiting control.",
         dose: { mgPerKg: 1, route: "SQ", frequency: "Once", durationDays: 1 },
         calculation: { patientWeightKg: 28.5, perDoseMg: 28.5 },
+        operationalReference: {
+          dosing: {
+            dose: "28.5 mg",
+            route: "SQ",
+            frequency: "Once daily",
+            duration: "1-5 days PRN",
+          },
+          timing: {
+            recheckInterval: "4-6 hours post-admin",
+            monitoringWindow: "24-48h",
+          },
+          referenceValues: [
+            { label: "Hydration", target: "<5%", unit: "dehydration" },
+          ],
+          calculations: [
+            { label: "Dose", value: "28.5 mg", formula: "28.5kg × 1mg/kg" },
+          ],
+          escalation: {
+            threshold: "Vomiting persists >48h or new symptoms",
+            contact: "ER: ext. 1100",
+          },
+        },
       },
       {
         drugName: "LRS Fluids",
@@ -256,6 +317,22 @@ export const mockAIResponses: Record<string, ClinicalAIResponse> = {
         rationale: "Restore hydration.",
         dose: { mgPerKg: 20, route: "SQ", frequency: "Once", durationDays: 1 },
         warnings: ["Listen to lungs post-admin"],
+        operationalReference: {
+          dosing: {
+            dose: "500 ml",
+            route: "SQ",
+            frequency: "Bolus",
+          },
+          timing: {
+            recheckInterval: "4-6 hours",
+            criticalCheckpoints: ["2h", "4h", "6h"],
+          },
+          referenceValues: [
+            { label: "Skin Turgor", target: "Normal", unit: "" },
+            { label: "CRT", target: "<2", unit: "sec" },
+          ],
+          contraindications: ["Pulmonary edema", "Cardiac disease"],
+        },
       },
     ],
   },
