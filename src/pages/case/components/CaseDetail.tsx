@@ -7,7 +7,7 @@ import { useIsMobile } from "@/hooks/useMediaQuery";
 // Components
 import { ReasoningPanel } from "./ReasoningPanel/ReasoningPanel";
 import { TreatmentPanel } from "./TreatmentPanel/TreatmentPanel";
-import { OpsIntelPanel } from "./OpsIntelPanel/OpsIntelPanel";
+// import { OpsIntelPanel } from "./OpsIntelPanel/OpsIntelPanel";
 import { DiagnosticsPanel } from "./DiagnosticsPanel/DiagnosticsPanel";
 import { CaseIntelPanel } from "./CaseIntelPanel/CaseInetlPanel";
 import { StatusBadge } from "@/components/ui/StatusBadge";
@@ -141,7 +141,7 @@ export const CaseDetail = ({ caseData }: CaseDetailProps) => {
                   progressionMode={aiResponse?.progressionMode}
                   trustData={aiResponse?.meta}
                 />
-                <OpsIntelPanel />
+                {/* <OpsIntelPanel /> */}
               </>
             )}
           </>
