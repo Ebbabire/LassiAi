@@ -44,7 +44,7 @@ export const PanelShell = ({
   return (
     <div
       className={`
-        bg-[#1A1D21] border rounded-lg shadow-sm mb-3 md:mb-4 overflow-hidden transition-all duration-200
+        bg-[#1A1D21] border rounded-lg shadow-sm mb-2 overflow-hidden transition-all duration-200
         ${
           variant === "highlight"
             ? "border-[#F2C94C]/30 ring-1 ring-[#F2C94C]/10"
@@ -57,13 +57,17 @@ export const PanelShell = ({
         <div
           onClick={onToggle}
           className={`
-            px-4 py-4 md:py-3 border-b flex items-center justify-between min-h-[48px] md:min-h-0
+            px-4 py-2 border-b flex items-center justify-between
             ${
               variant === "highlight"
                 ? "bg-[#F2C94C]/5 border-[#F2C94C]/20"
                 : "bg-[#1A1D21] border-[#2A2F33]"
             }
-            ${onToggle ? "cursor-pointer hover:bg-[#2A2F33] active:bg-[#2A2F33]" : ""}
+            ${
+              onToggle
+                ? "cursor-pointer hover:bg-[#2A2F33] active:bg-[#2A2F33]"
+                : ""
+            }
         `}
         >
           <div className="flex items-center gap-2.5">
@@ -77,7 +81,7 @@ export const PanelShell = ({
               </span>
             )}
             <h3
-              className={`font-semibold text-sm ${
+              className={`font-semibold text-xs ${
                 variant === "highlight" ? "text-[#F2C94C]" : "text-[#F2F2F2]"
               }`}
             >
@@ -113,7 +117,7 @@ export const PanelShell = ({
       </div>
 
       {isExpanded && (
-        <div className="p-4 animate-in slide-in-from-top-1 duration-200">
+        <div className="p-3 animate-in slide-in-from-top-1 duration-200">
           {children}
         </div>
       )}

@@ -29,7 +29,7 @@ export const DiagnosticItem = memo(({ test }: DiagnosticItemProps) => {
               {test.testName}
             </span>
             {test.recommendedByAI && (
-              <StatusBadge label="Suggested" variant="warning" />
+              <StatusBadge label="Indicated" variant="warning" />
             )}
           </div>
           <p className="text-sm text-[#9BA3AF] leading-snug">

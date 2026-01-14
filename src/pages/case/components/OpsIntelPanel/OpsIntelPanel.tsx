@@ -6,7 +6,7 @@ export const OpsIntelPanel = () => {
 
   return (
     <PanelShell
-      title="Operations"
+      title="Operations Panel"
       isExpanded={expandedPanels["ops"]}
       onToggle={() => togglePanel("ops")}
       icon={
