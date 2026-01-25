@@ -27,14 +27,3 @@ export type ThemeProviderProps = {
   defaultTheme?: Theme;
   storageKey?: string;
 };
-
-export interface RecommendationItem {
-  title: string;
-  value: string;
-}
-
-export interface ClinicalData {
-  summary: string;
-  recommendations: RecommendationItem[];
-  flags: string[];
-}

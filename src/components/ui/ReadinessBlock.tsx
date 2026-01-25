@@ -1,6 +1,3 @@
-// src/components/ui/ReadinessBlock.tsx
-// Deterministic "Why I'm silent" gatekeeper for Intelligence panels
-
 import { Lock, AlertCircle, ArrowRight } from "lucide-react";
 import type { ReadinessStatus } from "@/type/intelligence";
 
@@ -9,12 +6,6 @@ interface ReadinessBlockProps {
   className?: string;
 }
 
-/**
- * ReadinessBlock displays explicit reasons why Intelligence panels are locked.
- * - Shows lock state with missing inputs from backend
- * - Displays actionable unlock condition
- * - Zero flicker: renders deterministically based on backend response
- */
 export const ReadinessBlock = ({
   readiness,
   className = "",

@@ -1,3 +1,4 @@
+import { useMemo, useCallback, memo } from "react";
 import { useCaseContext } from "@/hooks/useCaseContext";
 
 import type {
@@ -9,30 +10,42 @@ import { PanelShell } from "@/components/ui/PanelShell";
 import { DiagnosticItem } from "./DiagnosticsItem";
 import { CheckCircle2, LucideMicroscope } from "lucide-react";
 import { SuccessCard } from "@/components/ui/SuccessCard";
+import { DiagnosticsPanelSkeleton } from "@/components/ui/skeletons";
 
 export interface DiagnosticsPanelProps {
-  diagnosticsResponse: DiagnosticItemType[];
+  diagnosticsResponse: DiagnosticItemType[] | null;
   trustData?: TrustMetadata;
+  isLoading?: boolean;
 }
-export const DiagnosticsPanel = ({
+export const DiagnosticsPanel = memo(({
   diagnosticsResponse,
   trustData,
+  isLoading,
 }: DiagnosticsPanelProps) => {
   const { expandedPanels, togglePanel, activeCaseId } = useCaseContext();
 
-  const diagnostics = diagnosticsResponse || [];
+  const diagnostics = useMemo(
+    () => diagnosticsResponse || [],
+    [diagnosticsResponse]
+  );
+
+  const handleToggle = useCallback(() => {
+    togglePanel("diagnostics");
+  }, [togglePanel]);
 
   return (
     <PanelShell
       title="Diagnostic Panel"
       isExpanded={expandedPanels["diagnostics"]}
-      onToggle={() => togglePanel("diagnostics")}
+      onToggle={handleToggle}
       icon={<LucideMicroscope className="h-5 w-5 text-[#9BA3AF]" />}
       telemetryLabel="diagnostics_panel_viewed"
       caseId={activeCaseId}
       trustData={trustData}
     >
-      {diagnostics.length === 0 ? (
+      {isLoading ? (
+        <DiagnosticsPanelSkeleton />
+      ) : diagnostics.length === 0 ? (
         <SuccessCard
           title="No immediate diagnostics pending"
           message="Standard monitoring protocols apply"
@@ -48,4 +61,6 @@ export const DiagnosticsPanel = ({
       )}
     </PanelShell>
   );
-};
+});
+
+DiagnosticsPanel.displayName = "DiagnosticsPanel";

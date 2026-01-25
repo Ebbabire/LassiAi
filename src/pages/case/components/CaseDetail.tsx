@@ -1,17 +1,44 @@
-import { useMemo, useEffect, useState } from "react";
+import {
+  useMemo,
+  useEffect,
+  useState,
+  useCallback,
+  lazy,
+  Suspense,
+} from "react";
 import type { Case } from "@/type/case";
 import type { ReadinessStatus } from "@/type/intelligence";
 import { useCaseContext } from "@/hooks/useCaseContext";
 import { useIsMobile } from "@/hooks/useMediaQuery";
 
-// Components
-import { ReasoningPanel } from "./ReasoningPanel/ReasoningPanel";
-import { TreatmentPanel } from "./TreatmentPanel/TreatmentPanel";
-// import { OpsIntelPanel } from "./OpsIntelPanel/OpsIntelPanel";
-import { DiagnosticsPanel } from "./DiagnosticsPanel/DiagnosticsPanel";
-import { CaseIntelPanel } from "./CaseIntelPanel/CaseInetlPanel";
+// Components - Eager load CaseIntelPanel (always visible)
+import { CaseIntelPanel } from "./CaseIntelPanel/CaseIntelPanel";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { ReadinessBlock } from "@/components/ui/ReadinessBlock";
+import { PanelErrorBoundary } from "@/components/ui/PanelErrorBoundary";
+
+// Lazy load heavy panels - but preload them immediately when CaseDetail mounts
+// This ensures no timing ambiguity: they load in background, ready when needed
+const ReasoningPanel = lazy(() =>
+  import("./ReasoningPanel/ReasoningPanel").then((m) => ({
+    default: m.ReasoningPanel,
+  }))
+);
+const TreatmentPanel = lazy(() =>
+  import("./TreatmentPanel/TreatmentPanel").then((m) => ({
+    default: m.TreatmentPanel,
+  }))
+);
+const DiagnosticsPanel = lazy(() =>
+  import("./DiagnosticsPanel/DiagnosticsPanel").then((m) => ({
+    default: m.DiagnosticsPanel,
+  }))
+);
+
+// Skeleton fallbacks for lazy-loaded panels
+import { ReasoningPanelSkeleton } from "@/components/ui/skeletons";
+import { TreatmentPanelSkeleton } from "@/components/ui/skeletons";
+import { DiagnosticsPanelSkeleton } from "@/components/ui/skeletons";
 
 // Mock Data Source (this will be changed to a React Query hook)
 import { mockAIResponses, mockBundles } from "@/data/mockIntellegence";
@@ -52,12 +79,33 @@ export const CaseDetail = ({ caseData }: CaseDetailProps) => {
     setActiveCaseId(caseData.id);
   }, [caseData.id, setActiveCaseId]);
 
+  // Simulate loading state for skeleton testing
+  const [isLoading, setIsLoading] = useState(true);
+
   // Retrieve Intelligence Data
   const bundle = useMemo(() => mockBundles[caseData.id] || null, [caseData.id]);
   const aiResponse = useMemo(
     () => mockAIResponses[caseData.id] || null,
     [caseData.id]
   );
+
+  // Simulate loading delay to verify skeleton behavior
+  useEffect(() => {
+    setIsLoading(true);
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 800); // 800ms delay to show skeletons
+    return () => clearTimeout(timer);
+  }, [caseData.id]);
+
+  // Preload lazy components immediately when CaseDetail mounts
+  // This ensures they're ready when needed, avoiding any perceived delay
+  useEffect(() => {
+    // Trigger lazy loading in background
+    import("./ReasoningPanel/ReasoningPanel");
+    import("./TreatmentPanel/TreatmentPanel");
+    import("./DiagnosticsPanel/DiagnosticsPanel");
+  }, []);
 
   // Determine lock state: Backend authority via aiResponse.readiness
   // Dev Mode: simulateLock overrides for QA testing
@@ -98,6 +146,11 @@ export const CaseDetail = ({ caseData }: CaseDetailProps) => {
     }
   }, [aiResponse, setExpandedPanels, isMobile, isLocked]);
 
+  // Memoize toggle handler for dev lock button
+  const handleToggleLock = useCallback(() => {
+    setSimulateLock((prev) => !prev);
+  }, []);
+
   return (
     <div className="h-[400px] lg:h-full scrollbar-thin scrollbar-thumb-[#2A2F33] scrollbar-track-transparent bg-[#0D0F12] border border-[#2A2F33] rounded-lg shadow-sm flex flex-col overflow-y-auto animate-in fade-in duration-300 relative">
       {/* Header */}
@@ -122,7 +175,13 @@ export const CaseDetail = ({ caseData }: CaseDetailProps) => {
         {bundle ? (
           <>
             {/* CaseIntelPanel (Summary) - Always visible regardless of lock state */}
-            <CaseIntelPanel bundle={bundle} nextSteps={aiResponse?.nextSteps} />
+            <div className="transition-opacity duration-300">
+              <CaseIntelPanel
+                bundle={bundle}
+                nextSteps={aiResponse?.nextSteps}
+                isLoading={isLoading}
+              />
+            </div>
 
             {/* Intelligence Panels - Gated by readiness */}
             {isLocked && readinessData ? (
@@ -131,16 +190,39 @@ export const CaseDetail = ({ caseData }: CaseDetailProps) => {
             ) : (
               // UNLOCKED: Show Intelligence Panels normally
               <>
-                <ReasoningPanel reasoningResponse={aiResponse} />
-                <DiagnosticsPanel
-                  diagnosticsResponse={aiResponse?.diagnostics}
-                  trustData={aiResponse?.meta}
-                />
-                <TreatmentPanel
-                  treatmentResponse={aiResponse?.treatments}
-                  progressionMode={aiResponse?.progressionMode}
-                  trustData={aiResponse?.meta}
-                />
+                <div className="transition-opacity duration-300">
+                  <PanelErrorBoundary panelName="Clinical Reasoning">
+                    <Suspense fallback={<ReasoningPanelSkeleton />}>
+                      <ReasoningPanel
+                        reasoningResponse={aiResponse}
+                        isLoading={isLoading}
+                      />
+                    </Suspense>
+                  </PanelErrorBoundary>
+                </div>
+                <div className="transition-opacity duration-300">
+                  <PanelErrorBoundary panelName="Diagnostics">
+                    <Suspense fallback={<DiagnosticsPanelSkeleton />}>
+                      <DiagnosticsPanel
+                        diagnosticsResponse={aiResponse?.diagnostics || null}
+                        trustData={aiResponse?.meta}
+                        isLoading={isLoading}
+                      />
+                    </Suspense>
+                  </PanelErrorBoundary>
+                </div>
+                <div className="transition-opacity duration-300">
+                  <PanelErrorBoundary panelName="Treatment Plan">
+                    <Suspense fallback={<TreatmentPanelSkeleton />}>
+                      <TreatmentPanel
+                        treatmentResponse={aiResponse?.treatments || null}
+                        progressionMode={aiResponse?.progressionMode}
+                        trustData={aiResponse?.meta}
+                        isLoading={isLoading}
+                      />
+                    </Suspense>
+                  </PanelErrorBoundary>
+                </div>
                 {/* <OpsIntelPanel /> */}
               </>
             )}
@@ -179,7 +261,7 @@ export const CaseDetail = ({ caseData }: CaseDetailProps) => {
       {/* Dev Mode Simulator Button - Only visible in development */}
       {import.meta.env.DEV && (
         <button
-          onClick={() => setSimulateLock((prev) => !prev)}
+          onClick={handleToggleLock}
           className={`fixed bottom-4 right-4 z-50 px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider shadow-lg transition-all ${
             simulateLock
               ? "bg-amber-500 text-black hover:bg-amber-400"
